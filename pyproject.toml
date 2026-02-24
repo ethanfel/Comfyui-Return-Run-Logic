@@ -1,0 +1,13 @@
+[project]
+name = "comfyui-return-run-logic"
+description = "Adds a toggle button to quickly switch between Run and Run (Instant) modes without opening the queue button dropdown menu."
+version = "1.0.0"
+license = {text = "MIT"}
+
+[project.urls]
+Repository = "https://github.com/ethanfel/Comfyui-Return-Run-Logic"
+
+[tool.comfy]
+PublisherId = "ethanfel"
+DisplayName = "Comfyui-Return-Run-Logic"
+Icon = ""
