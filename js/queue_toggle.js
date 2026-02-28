@@ -50,17 +50,15 @@ function createToggleButton(store) {
         justifyContent: "center",
         border: "none",
         cursor: "pointer",
-        padding: "4px 8px",
-        borderRadius: "4px",
-        fontSize: "12px",
-        fontWeight: "600",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        padding: "0",
+        borderRadius: "6px",
         lineHeight: "1",
-        transition: "background 0.15s ease, color 0.15s ease",
-        whiteSpace: "nowrap",
+        transition: "background 0.2s ease, box-shadow 0.2s ease",
         userSelect: "none",
+        width: "32px",
         height: "30px",
         marginLeft: "4px",
+        outline: "none",
     });
 
     btn.addEventListener("click", (e) => {
@@ -80,24 +78,73 @@ function createToggleButton(store) {
     return btn;
 }
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function createBoltSVG(isInstant) {
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "18");
+    svg.setAttribute("height", "18");
+    svg.style.display = "block";
+    svg.style.transition = "filter 0.2s ease";
+
+    // Lightning bolt path
+    const bolt = document.createElementNS(SVG_NS, "path");
+    bolt.setAttribute("d", "M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z");
+    bolt.setAttribute("stroke-linejoin", "round");
+    bolt.setAttribute("stroke-linecap", "round");
+
+    if (isInstant) {
+        bolt.setAttribute("fill", "#fff");
+        bolt.setAttribute("stroke", "#fff");
+        bolt.setAttribute("stroke-width", "1");
+        svg.style.filter = "drop-shadow(0 0 3px rgba(255,180,50,0.6))";
+    } else {
+        bolt.setAttribute("fill", "none");
+        bolt.setAttribute("stroke", "#888");
+        bolt.setAttribute("stroke-width", "1.8");
+        svg.style.filter = "none";
+    }
+
+    svg.appendChild(bolt);
+
+    // Slash line when OFF
+    if (!isInstant) {
+        const slash = document.createElementNS(SVG_NS, "line");
+        slash.setAttribute("x1", "4");
+        slash.setAttribute("y1", "4");
+        slash.setAttribute("x2", "20");
+        slash.setAttribute("y2", "20");
+        slash.setAttribute("stroke", "#888");
+        slash.setAttribute("stroke-width", "1.8");
+        slash.setAttribute("stroke-linecap", "round");
+        svg.appendChild(slash);
+    }
+
+    return svg;
+}
+
 function applyButtonState(btn, mode) {
     const isInstant = mode === "instant";
 
+    // Clear existing SVG
+    btn.innerHTML = "";
+
     if (isInstant) {
-        btn.textContent = "Instant: ON";
         btn.title = "Click to switch to Run (normal queue)";
         Object.assign(btn.style, {
             background: "#e67e22",
-            color: "#fff",
+            boxShadow: "0 0 8px rgba(230,126,34,0.4)",
         });
     } else {
-        btn.textContent = "Instant: OFF";
         btn.title = "Click to switch to Run (Instant)";
         Object.assign(btn.style, {
             background: "#3a3a3a",
-            color: "#aaa",
+            boxShadow: "none",
         });
     }
+
+    btn.appendChild(createBoltSVG(isInstant));
 }
 
 let storeUnsubscribe = null;
